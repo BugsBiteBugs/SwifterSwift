@@ -17,23 +17,23 @@ final class NSColorExtensionsTests: XCTestCase {
 
         if #available(macOS 12, *) {
             NSAppearance(named: .aqua)?.performAsCurrentDrawingAppearance {
-                view.backgroundColor = color
+                view.backgroundColour = color
             }
         } else {
             NSAppearance.current = NSAppearance(named: .aqua)
-            view.backgroundColor = color
+            view.backgroundColour = color
         }
-        XCTAssertEqual(view.backgroundColor, lightModeColor)
+        XCTAssertEqual(view.backgroundColour, lightModeColor)
 
         if #available(macOS 12, *) {
             NSAppearance(named: .darkAqua)?.performAsCurrentDrawingAppearance {
-                view.backgroundColor = color
+                view.backgroundColour = color
             }
         } else {
             NSAppearance.current = NSAppearance(named: .darkAqua)
-            view.backgroundColor = color
+            view.backgroundColour = color
         }
-        XCTAssertEqual(view.backgroundColor, darkModeColor)
+        XCTAssertEqual(view.backgroundColour, darkModeColor)
     }
 }
 
