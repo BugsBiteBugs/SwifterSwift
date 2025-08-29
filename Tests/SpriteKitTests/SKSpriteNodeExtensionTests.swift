@@ -1,4 +1,4 @@
-// SKSpriteNodeExtensionTests.swift - Copyright 2024 SwifterSwift
+// SKSpriteNodeExtensionTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -6,6 +6,7 @@ import XCTest
 #if canImport(SpriteKit) && canImport(UIKit)
 import SpriteKit
 
+@MainActor
 final class SKSpriteNodeExtensionTests: XCTestCase {
     func testAspectFill() {
         let bundle = Bundle(for: SKSpriteNodeExtensionTests.self)

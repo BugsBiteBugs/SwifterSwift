@@ -1,4 +1,4 @@
-// NSRegularExpressionExtensions.swift - Copyright 2024 SwifterSwift
+// NSRegularExpressionExtensions.swift - Copyright 2025 SwifterSwift
 
 #if canImport(Foundation)
 import Foundation
@@ -21,7 +21,7 @@ public extension NSRegularExpression {
     ///   - stop:
     ///     A reference to a Boolean value. The Block can set the value to true to stop further processing of the array.
     /// The stop argument is an out-only argument. You should only ever set this Boolean to true within the Block.
-    #if os(Linux)
+    #if os(Linux) || os(Android)
     func enumerateMatches(in string: String,
                           options: MatchingOptions = [],
                           range: Range<String.Index>,

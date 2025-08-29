@@ -1,4 +1,4 @@
-// UITextFieldExtensions.swift - Copyright 2024 SwifterSwift
+// UITextFieldExtensions.swift - Copyright 2025 SwifterSwift
 
 #if canImport(UIKit) && !os(watchOS)
 import UIKit
@@ -81,32 +81,6 @@ public extension UITextField {
         return text!.range(of: "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}",
                            options: String.CompareOptions.regularExpression,
                            range: nil, locale: nil) != nil
-    }
-
-    /// SwifterSwift: Left view tint color.
-    @IBInspectable var leftViewTintColor: UIColor? {
-        get {
-            guard let iconView = leftView as? UIImageView else { return nil }
-            return iconView.tintColor
-        }
-        set {
-            guard let iconView = leftView as? UIImageView else { return }
-            iconView.image = iconView.image?.withRenderingMode(.alwaysTemplate)
-            iconView.tintColor = newValue
-        }
-    }
-
-    /// SwifterSwift: Right view tint color.
-    @IBInspectable var rightViewTintColor: UIColor? {
-        get {
-            guard let iconView = rightView as? UIImageView else { return nil }
-            return iconView.tintColor
-        }
-        set {
-            guard let iconView = rightView as? UIImageView else { return }
-            iconView.image = iconView.image?.withRenderingMode(.alwaysTemplate)
-            iconView.tintColor = newValue
-        }
     }
 }
 

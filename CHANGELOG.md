@@ -3,8 +3,43 @@
 The changelog for **SwifterSwift**. Also see the [releases](https://github.com/SwifterSwift/SwifterSwift/releases) on GitHub.
 
 ## Upcoming Release
+### Breaking Change
 ### Added
+### Changed
+### Fixed
+### Deprecated
+### Removed
 
+## [v8.0.0](https://github.com/SwifterSwift/SwifterSwift/releases/tag/8.0.0)
+### Breaking Change
+- **String**
+  - Replaced `~=` operator overload with `=~` to fix breaking `switch` statements and align with other languages. [#1239](https://github.com/SwifterSwift/SwifterSwift/pull/1239) by [guykogus](https://github.com/guykogus)
+
+### Added
+- **UIView**
+  - Added `addBottomSeparator(color:height:spacing:)` method to easily insert a bottom line to a view. 🚀 [#1234](https://github.com/SwifterSwift/SwifterSwift/pull/1234) by [sangjin](https://github.com/SsangG77)
+- **Android**
+  - Added Android platform support. [#1230](https://github.com/SwifterSwift/SwifterSwift/pull/1230) by [Marc Prud'hommeaux](https://github.com/marcprux)
+- **CocoaPods**
+  - Added subspecs to not include `@IBInspectable` extensions, which can cause Xcode Interface Builder to run slowly. [#1323](https://github.com/SwifterSwift/SwifterSwift/pull/1323) by [guykogus](https://github.com/guykogus)
+
+### Changed
+- **String**
+  - `localized(comment:)` now supports all parameters provided by `NSLocalizedString(tableName:bundle:value:comment:)`. [#1217](https://github.com/SwifterSwift/SwifterSwift/pull/1217) by [Shiki Suen](https://github.com/ShikiSuen)
+
+### Fixed
+- **Examples** : Added "import Foundation" to Foundation Extension Playground page for Date() extension to work properly on Mac
+- **Array**
+  - `init(unsafeUninitializedCapacity:initializedWith:)` `initializedCount` should be equal to the number of successfully initialized elements, ensuring that the `Array` properly releases allocated memory in case of an error.[#1222](https://github.com/SwifterSwift/SwifterSwift/pull/1222) by [fallwd](https://github.com/fallwd)
+- **FloatingPoint**
+  - Calculate `ceil` and `floor` using `rounded(_:)`, and `√` using `squareRoot()`, instead of using `Foundation` functions. [#1231](https://github.com/SwifterSwift/SwifterSwift/pull/1231) by [guykogus](https://github.com/guykogus)
+
+### Deprecated
+
+### Removed
+- Sequence's `count(where:)` method, as it already exists in stdlib. [#1221](https://github.com/SwifterSwift/SwifterSwift/pull/1221) by [vikingosegundo](https://github.com/vikingosegundo)
+
+## [v7.0.0](https://github.com/SwifterSwift/SwifterSwift/releases/tag/7.0.0)
 ### Fixed
 - **Xcode 16**
   - Fixed compilation errors, warnings and tests. [#1197](https://github.com/SwifterSwift/SwifterSwift/pull/1197) by [guykogus](https://github.com/guykogus)
@@ -15,6 +50,10 @@ The changelog for **SwifterSwift**. Also see the [releases](https://github.com/S
   - Marked `init(colors:locations:startPoint:endPoint:type:)` as available for `(macOS 10.14, *)`. [#1197](https://github.com/SwifterSwift/SwifterSwift/pull/1197) by [guykogus](https://github.com/guykogus)
 - **CGAffineTransform**
   - Marked `transform3D()` as unavailable for watchOS. [#1197](https://github.com/SwifterSwift/SwifterSwift/pull/1197) by [guykogus](https://github.com/guykogus)
+- **Future**
+  - `init(asyncFunc:)` as incompatible with Swift 6 concurrency protection, and isn't needed anyway as `async`-`await` supersedes `Future`. [#1207](https://github.com/SwifterSwift/SwifterSwift/pull/1207) by [guykogus](https://github.com/guykogus)
+- **URLSession**
+  - `dataSync(with:)` as incompatible with Swift 6 concurrency protection, and isn't needed anyway as the `data(from:delegate:)` `async` function can be used. [#1207](https://github.com/SwifterSwift/SwifterSwift/pull/1207) by [guykogus](https://github.com/guykogus)
 
 ## [v6.2.0](https://github.com/SwifterSwift/SwifterSwift/releases/tag/6.2.0)
 ### Added

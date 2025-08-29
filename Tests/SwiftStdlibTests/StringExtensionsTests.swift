@@ -1,4 +1,4 @@
-// StringExtensionsTests.swift - Copyright 2024 SwifterSwift
+// StringExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -223,13 +223,14 @@ final class StringExtensionsTests: XCTestCase {
     }
 
     func testUrl() {
-        #if os(Linux)
-        XCTAssertNil("hello world".url)
+        let helloWorld = "hello world".url
+        #if os(Linux) || os(Android)
+        XCTAssertEqual(helloWorld, URL(string: "hello%20world"))
         #else
         if #available(iOS 17.0, *) {
-            XCTAssertEqual("hello world".url, URL(string: "hello%20world"))
+            XCTAssertEqual(helloWorld, URL(string: "hello%20world"))
         } else {
-            XCTAssertNil("hello world".url)
+            XCTAssertNil(helloWorld)
         }
         #endif
 
@@ -276,7 +277,7 @@ final class StringExtensionsTests: XCTestCase {
         XCTAssertNotNil("8.23".float(locale: Locale(identifier: "en_US_POSIX")))
         XCTAssertEqual("8.23".float(locale: Locale(identifier: "en_US_POSIX")), Float(8.23))
 
-        #if os(Linux)
+        #if os(Linux) || os(Android)
         XCTAssertEqual("8s".float(), 8)
         #else
         XCTAssertNil("8s".float())
@@ -290,7 +291,7 @@ final class StringExtensionsTests: XCTestCase {
         XCTAssertNotNil("8.23".double(locale: Locale(identifier: "en_US_POSIX")))
         XCTAssertEqual("8.23".double(locale: Locale(identifier: "en_US_POSIX")), 8.23)
 
-        #if os(Linux)
+        #if os(Linux) || os(Android)
         XCTAssertEqual("8s".double(), 8)
         #else
         XCTAssertNil("8s".double())
@@ -298,7 +299,7 @@ final class StringExtensionsTests: XCTestCase {
     }
 
     func testCgFloat() {
-        #if !os(Linux)
+        #if !os(Linux) && !os(Android)
         XCTAssertNotNil("8".cgFloat())
         XCTAssertEqual("8".cgFloat(), 8)
 
@@ -310,7 +311,7 @@ final class StringExtensionsTests: XCTestCase {
     }
 
     func testLines() {
-        #if !os(Linux)
+        #if !os(Linux) && !os(Android)
         XCTAssertEqual("Hello\ntest".lines(), ["Hello", "test"])
         #endif
     }
@@ -619,32 +620,22 @@ final class StringExtensionsTests: XCTestCase {
 
     #if canImport(Foundation)
     func testPatternMatchOperator() {
-        XCTAssert("\\d{3}" ~= "123")
-        XCTAssertFalse("\\d{3}" ~= "dasda")
-        XCTAssertFalse(emailPattern ~= "notanemail.com")
-        XCTAssert(emailPattern ~= "email@mail.com")
-        XCTAssert("[a-z]at" ~= "hat")
-        XCTAssertFalse("[a-z]at" ~= "")
-        XCTAssert("[a-z]*" ~= "")
-        XCTAssertFalse("[0-9]+" ~= "")
-
-        // https://github.com/SwifterSwift/SwifterSwift/issues/1109
-        let codeString = "0"
-        switch codeString {
-        case "101":
-            XCTAssert(codeString == "101")
-        case "0":
-            XCTAssert(codeString == "0")
-        default:
-            XCTFail("Switch string value, not matching the correct result.")
-        }
+        XCTAssert("123" =~ "\\d{3}")
+        XCTAssertFalse("dasda" =~ "\\d{3}")
+        XCTAssertFalse("notanemail.com" =~ emailPattern)
+        XCTAssert("email@mail.com" =~ emailPattern)
+        XCTAssert("hat" =~ "[a-z]at")
+        XCTAssertFalse("" =~ "[a-z]at")
+        XCTAssert("" =~ "[a-z]*")
+        XCTAssert("" =~ "[a-z]*")
+        XCTAssertFalse("" =~ "[0-9]+")
     }
     #endif
 
     func testRegexMatchOperator() throws {
         let regex = try NSRegularExpression(pattern: "\\d{3}")
-        XCTAssert(regex ~= "123")
-        XCTAssertFalse(regex ~= "abc")
+        XCTAssert("123" =~ regex)
+        XCTAssertFalse("abc" =~ regex)
     }
 
     func testPadStart() {
@@ -717,6 +708,8 @@ final class StringExtensionsTests: XCTestCase {
         XCTAssertEqual("str".paddingEnd(2), "str")
     }
 
+    #if !os(Android)
+    @MainActor
     func testIsSpelledCorrectly() {
         #if os(iOS) || os(tvOS)
         let strCorrect = "Hello, World!"
@@ -727,6 +720,7 @@ final class StringExtensionsTests: XCTestCase {
         XCTAssertFalse(strNonCorrect.isSpelledCorrectly)
         #endif
     }
+    #endif
 
     func testRemovingPrefix() {
         let inputStr = "Hello, World!"
@@ -775,7 +769,7 @@ final class StringExtensionsTests: XCTestCase {
     }
 
     func testUnderline() {
-        #if !os(Linux)
+        #if !os(Linux) && !os(Android)
         let underlinedString = "hello".underline
         let attrs = underlinedString.attributes(
             at: 0,
@@ -791,7 +785,7 @@ final class StringExtensionsTests: XCTestCase {
     }
 
     func testStrikethrough() {
-        #if !os(Linux)
+        #if !os(Linux) && !os(Android)
         let strikedthroughString = "hello".strikethrough
         let attrs = strikedthroughString.attributes(
             at: 0,

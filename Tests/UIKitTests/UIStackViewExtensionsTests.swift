@@ -1,4 +1,4 @@
-// UIStackViewExtensionsTests.swift - Copyright 2024 SwifterSwift
+// UIStackViewExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -6,7 +6,8 @@ import XCTest
 #if canImport(UIKit) && !os(watchOS)
 import UIKit
 
-final class UIStackViewExtensionsTest: XCTestCase {
+@MainActor
+final class UIStackViewExtensionsTests: XCTestCase {
     // MARK: - Initializers
 
     func testInitWithViews() {

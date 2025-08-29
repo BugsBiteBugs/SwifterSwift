@@ -1,4 +1,4 @@
-// OptionalExtensions.swift - Copyright 2024 SwifterSwift
+// OptionalExtensions.swift - Copyright 2025 SwifterSwift
 
 // MARK: - Methods
 
@@ -64,7 +64,7 @@ public extension Optional {
     ///   - lhs: Any?
     ///   - rhs: Any?
     static func ??= (lhs: inout Optional, rhs: Optional) {
-        guard let rhs = rhs else { return }
+        guard let rhs else { return }
         lhs = rhs
     }
 

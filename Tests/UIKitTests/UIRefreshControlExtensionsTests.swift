@@ -1,4 +1,4 @@
-// UIRefreshControlExtensionsTests.swift - Copyright 2024 SwifterSwift
+// UIRefreshControlExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -6,6 +6,7 @@ import XCTest
 #if canImport(UIKit) && os(iOS)
 import UIKit
 
+@MainActor
 final class UIRefreshControlExtensionTests: XCTestCase {
     func testBeginRefreshAsRefreshControlSubview() {
         let window = UIWindow()

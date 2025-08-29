@@ -1,4 +1,4 @@
-// NSColorExtensionsTests.swift - Copyright 2024 SwifterSwift
+// NSColorExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -6,6 +6,7 @@ import XCTest
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
 import AppKit
 
+@MainActor
 final class NSColorExtensionsTests: XCTestCase {
     @available(macOS 10.15, *)
     func testInitLightDark() {

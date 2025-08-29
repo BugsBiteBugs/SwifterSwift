@@ -1,4 +1,4 @@
-// ArrayExtensions.swift - Copyright 2024 SwifterSwift
+// ArrayExtensions.swift - Copyright 2025 SwifterSwift
 
 // MARK: - Initializers
 
@@ -13,8 +13,8 @@ public extension Array {
         try self.init(unsafeUninitializedCapacity: count) { buffer, initializedCount in
             for index in 0..<count {
                 try buffer.baseAddress?.advanced(by: index).initialize(to: element(index))
+                initializedCount += 1
             }
-            initializedCount = count
         }
     }
 }
@@ -58,7 +58,7 @@ public extension Array {
     ///   - keyPath: keyPath indicating the property that the array should be sorted by
     /// - Returns: sorted array.
     func sorted<T: Hashable>(like otherArray: [T], keyPath: KeyPath<Element, T>) -> [Element] {
-        let dict = otherArray.enumerated().reduce(into: [:]) { $0[$1.element] = $1.offset }
+        let dict = Dictionary(uniqueKeysWithValues: otherArray.enumerated().map { ($1, $0) })
         return sorted {
             guard let thisIndex = dict[$0[keyPath: keyPath]] else { return false }
             guard let otherIndex = dict[$1[keyPath: keyPath]] else { return true }
@@ -134,7 +134,7 @@ public extension Array where Element: Equatable {
     ///
     /// - Parameter path: Key path to compare, the value must be Equatable.
     /// - Returns: an array of unique elements.
-    func withoutDuplicates<E: Equatable>(keyPath path: KeyPath<Element, E>) -> [Element] {
+    func withoutDuplicates(keyPath path: KeyPath<Element, some Equatable>) -> [Element] {
         return reduce(into: [Element]()) { result, element in
             if !result.contains(where: { $0[keyPath: path] == element[keyPath: path] }) {
                 result.append(element)

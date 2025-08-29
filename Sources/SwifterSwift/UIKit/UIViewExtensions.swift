@@ -1,4 +1,4 @@
-// UIViewExtensions.swift - Copyright 2024 SwifterSwift
+// UIViewExtensions.swift - Copyright 2025 SwifterSwift
 
 #if canImport(UIKit) && !os(watchOS)
 import UIKit
@@ -51,7 +51,7 @@ public extension UIView {
     }
 
     /// SwifterSwift: Add gradient directions
-    struct GradientDirection {
+    struct GradientDirection: Sendable {
         public static let topToBottom = GradientDirection(startPoint: CGPoint(x: 0.5, y: 0.0),
                                                           endPoint: CGPoint(x: 0.5, y: 1.0))
         public static let bottomToTop = GradientDirection(startPoint: CGPoint(x: 0.5, y: 1.0),
@@ -74,44 +74,6 @@ public extension UIView {
 // MARK: - Properties
 
 public extension UIView {
-    /// SwifterSwift: Border color of view; also inspectable from Storyboard.
-    @IBInspectable var layerBorderColor: UIColor? {
-        get {
-            guard let color = layer.borderColor else { return nil }
-            return UIColor(cgColor: color)
-        }
-        set {
-            guard let color = newValue else {
-                layer.borderColor = nil
-                return
-            }
-            // Fix React-Native conflict issue
-            guard String(describing: type(of: color)) != "__NSCFType" else { return }
-            layer.borderColor = color.cgColor
-        }
-    }
-
-    /// SwifterSwift: Border width of view; also inspectable from Storyboard.
-    @IBInspectable var layerBorderWidth: CGFloat {
-        get {
-            return layer.borderWidth
-        }
-        set {
-            layer.borderWidth = newValue
-        }
-    }
-
-    /// SwifterSwift: Corner radius of view; also inspectable from Storyboard.
-    @IBInspectable var layerCornerRadius: CGFloat {
-        get {
-            return layer.cornerRadius
-        }
-        set {
-            layer.masksToBounds = true
-            layer.cornerRadius = abs(CGFloat(Int(newValue * 100)) / 100)
-        }
-    }
-
     /// SwifterSwift: Height of view.
     var height: CGFloat {
         get {
@@ -133,57 +95,6 @@ public extension UIView {
         guard size != .zero else { return nil }
         return UIGraphicsImageRenderer(size: layer.frame.size).image { context in
             layer.render(in: context.cgContext)
-        }
-    }
-
-    /// SwifterSwift: Shadow color of view; also inspectable from Storyboard.
-    @IBInspectable var layerShadowColor: UIColor? {
-        get {
-            guard let color = layer.shadowColor else { return nil }
-            return UIColor(cgColor: color)
-        }
-        set {
-            layer.shadowColor = newValue?.cgColor
-        }
-    }
-
-    /// SwifterSwift: Shadow offset of view; also inspectable from Storyboard.
-    @IBInspectable var layerShadowOffset: CGSize {
-        get {
-            return layer.shadowOffset
-        }
-        set {
-            layer.shadowOffset = newValue
-        }
-    }
-
-    /// SwifterSwift: Shadow opacity of view; also inspectable from Storyboard.
-    @IBInspectable var layerShadowOpacity: Float {
-        get {
-            return layer.shadowOpacity
-        }
-        set {
-            layer.shadowOpacity = newValue
-        }
-    }
-
-    /// SwifterSwift: Shadow radius of view; also inspectable from Storyboard.
-    @IBInspectable var layerShadowRadius: CGFloat {
-        get {
-            return layer.shadowRadius
-        }
-        set {
-            layer.shadowRadius = newValue
-        }
-    }
-
-    /// SwifterSwift: Masks to bounds of view; also inspectable from Storyboard.
-    @IBInspectable var masksToBounds: Bool {
-        get {
-            return layer.masksToBounds
-        }
-        set {
-            layer.masksToBounds = newValue
         }
     }
 
@@ -385,7 +296,7 @@ public extension UIView {
 
     /// SwifterSwift: Remove all gesture recognizers from view.
     func removeGestureRecognizers() {
-        gestureRecognizers?.forEach(removeGestureRecognizer)
+        try? gestureRecognizers?.forEach(removeGestureRecognizer)
     }
 
     /// SwifterSwift: Attaches gesture recognizers to the view. Attaching gesture recognizers to a view defines the
@@ -487,12 +398,11 @@ public extension UIView {
         animationType: ShakeAnimationType = .easeOut,
         completion: (() -> Void)? = nil) {
         CATransaction.begin()
-        let animation: CAKeyframeAnimation
-        switch direction {
+        let animation = switch direction {
         case .horizontal:
-            animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+            CAKeyframeAnimation(keyPath: "transform.translation.x")
         case .vertical:
-            animation = CAKeyframeAnimation(keyPath: "transform.translation.y")
+            CAKeyframeAnimation(keyPath: "transform.translation.y")
         }
         switch animationType {
         case .linear:
@@ -569,7 +479,7 @@ public extension UIView {
     func fillToSuperview() {
         // https://videos.letsbuildthatapp.com/
         translatesAutoresizingMaskIntoConstraints = false
-        if let superview = superview {
+        if let superview {
             let left = leftAnchor.constraint(equalTo: superview.leftAnchor)
             let right = rightAnchor.constraint(equalTo: superview.rightAnchor)
             let top = topAnchor.constraint(equalTo: superview.topAnchor)
@@ -610,19 +520,19 @@ public extension UIView {
 
         var anchors = [NSLayoutConstraint]()
 
-        if let top = top {
+        if let top {
             anchors.append(topAnchor.constraint(equalTo: top, constant: topConstant))
         }
 
-        if let left = left {
+        if let left {
             anchors.append(leftAnchor.constraint(equalTo: left, constant: leftConstant))
         }
 
-        if let bottom = bottom {
+        if let bottom {
             anchors.append(bottomAnchor.constraint(equalTo: bottom, constant: -bottomConstant))
         }
 
-        if let right = right {
+        if let right {
             anchors.append(rightAnchor.constraint(equalTo: right, constant: -rightConstant))
         }
 
@@ -700,6 +610,29 @@ public extension UIView {
             }
         }
         return views
+    }
+
+    /// SwifterSwift: Adds a horizontal separator to the bottom of the view.
+    ///
+    ///     let view = UIView()
+    ///     view.addBottomSeparator(color: .lightGray, height: 1, spacing: 8)
+    ///
+    /// - Parameters:
+    ///   - color: The separator color. Default is `.black`.
+    ///   - height: The height of the separator. Default is `1`.
+    ///   - spacing: Spacing from the bottom edge. Default is `0`.
+    func addBottomSeparator(color: UIColor = .black, height: CGFloat = 1, spacing: CGFloat = 0) {
+        let line = UIView()
+        line.translatesAutoresizingMaskIntoConstraints = false
+        line.backgroundColor = color
+        line.layer.cornerRadius = height / 2
+        addSubview(line)
+        NSLayoutConstraint.activate([
+            line.heightAnchor.constraint(equalToConstant: height),
+            line.leadingAnchor.constraint(equalTo: leadingAnchor),
+            line.trailingAnchor.constraint(equalTo: trailingAnchor),
+            line.bottomAnchor.constraint(equalTo: bottomAnchor, constant: spacing)
+        ])
     }
 }
 

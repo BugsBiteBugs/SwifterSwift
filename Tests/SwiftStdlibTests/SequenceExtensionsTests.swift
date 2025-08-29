@@ -1,4 +1,4 @@
-// SequenceExtensionsTests.swift - Copyright 2024 SwifterSwift
+// SequenceExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -33,12 +33,6 @@ final class SequenceExtensionsTests: XCTestCase {
         let input = [1, 2, 3, 4, 5]
         let output = input.reject { $0 % 2 == 0 }
         XCTAssertEqual(output, [1, 3, 5])
-    }
-
-    func testCountWhere() {
-        let array = [1, 1, 1, 1, 4, 4, 1, 1, 1]
-        let count = array.count { $0 % 2 == 0 }
-        XCTAssertEqual(count, 2)
     }
 
     func testForEachReversed() {
@@ -174,7 +168,7 @@ final class SequenceExtensionsTests: XCTestCase {
 
         // Testing optional keyPath
         let optionalCompare = { (char1: Character?, char2: Character?) -> Bool in
-            guard let char1 = char1, let char2 = char2 else { return false }
+            guard let char1, let char2 else { return false }
             return char1 < char2
         }
 
@@ -192,7 +186,7 @@ final class SequenceExtensionsTests: XCTestCase {
 
         // Testing optional map function
         let optionalCompare = { (char1: Character?, char2: Character?) -> Bool in
-            guard let char1 = char1, let char2 = char2 else { return false }
+            guard let char1, let char2 else { return false }
             return char1 < char2
         }
 

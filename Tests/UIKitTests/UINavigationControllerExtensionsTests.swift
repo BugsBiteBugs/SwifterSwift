@@ -1,4 +1,4 @@
-// UINavigationControllerExtensionsTests.swift - Copyright 2024 SwifterSwift
+// UINavigationControllerExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -6,6 +6,7 @@ import XCTest
 #if canImport(UIKit) && !os(watchOS)
 import UIKit
 
+@MainActor
 final class UINavigationControllerExtensionsTests: XCTestCase {
     func testPushViewController() {
         let navigationController = UINavigationController()

@@ -1,4 +1,4 @@
-// SKNodeExtensions.swift - Copyright 2024 SwifterSwift
+// SKNodeExtensions.swift - Copyright 2025 SwifterSwift
 
 #if canImport(SpriteKit)
 import SpriteKit
@@ -11,7 +11,7 @@ public extension SKNode {
     ///         mySKNode.descendants() -> [childNodeOne, childNodeTwo]
     ///
     func descendants() -> [SKNode] {
-        var children = self.children
+        var children = children
         children.append(contentsOf: children.reduce(into: [SKNode]()) { $0.append(contentsOf: $1.descendants()) })
         return children
     }

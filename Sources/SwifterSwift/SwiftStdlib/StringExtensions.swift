@@ -1,4 +1,4 @@
-// StringExtensions.swift - Copyright 2024 SwifterSwift
+// StringExtensions.swift - Copyright 2025 SwifterSwift
 
 #if canImport(Foundation)
 import Foundation
@@ -27,7 +27,7 @@ public extension String {
     var base64Decoded: String? {
         if let data = Data(base64Encoded: self,
                            options: .ignoreUnknownCharacters) {
-            return String(decoding: data, as: UTF8.self)
+            return String(data: data, encoding: .utf8)
         }
 
         let remainder = count % 4
@@ -40,7 +40,7 @@ public extension String {
         guard let data = Data(base64Encoded: self + padding,
                               options: .ignoreUnknownCharacters) else { return nil }
 
-        return String(decoding: data, as: UTF8.self)
+        return String(data: data, encoding: .utf8)
     }
     #endif
 
@@ -115,7 +115,7 @@ public extension String {
     ///		"".firstCharacterAsString -> nil
     ///
     var firstCharacterAsString: String? {
-        guard let first = first else { return nil }
+        guard let first else { return nil }
         return String(first)
     }
 
@@ -259,7 +259,7 @@ public extension String {
     var isNumeric: Bool {
         let scanner = Scanner(string: self)
         scanner.locale = NSLocale.current
-        #if os(Linux) || targetEnvironment(macCatalyst)
+        #if os(Linux) || os(Android) || targetEnvironment(macCatalyst)
         return scanner.scanDecimal() != nil && scanner.isAtEnd
         #else
         return scanner.scanDecimal(nil) && scanner.isAtEnd
@@ -285,7 +285,7 @@ public extension String {
     ///		"".lastCharacterAsString -> nil
     ///
     var lastCharacterAsString: String? {
-        guard let last = last else { return nil }
+        guard let last else { return nil }
         return String(last)
     }
 
@@ -442,6 +442,7 @@ public extension String {
 
     #if os(iOS) || os(tvOS)
     /// SwifterSwift: Check if the given string spelled correctly.
+    @MainActor
     var isSpelledCorrectly: Bool {
         let checker = UITextChecker()
         let range = NSRange(startIndex..<endIndex, in: self)
@@ -519,10 +520,22 @@ public extension String {
     ///
     ///        "Hello world".localized() -> Hallo Welt
     ///
-    /// - Parameter comment: Optional comment for translators.
-    /// - Returns: Localized string.
-    func localized(comment: String = "") -> String {
-        return NSLocalizedString(self, comment: comment)
+    /// - Parameters:
+    ///   - tableName: The name of the table containing the key-value pairs. Also, the suffix for the strings file (a
+    /// file with the.strings extension) to store the localized string. This defaults to the table in
+    /// `Localizable.strings` when tableName is nil or an empty string.
+    ///   - bundle: The bundle containing the table’s strings file. The main bundle is used if one isn’t specified.
+    ///   - value: The localized string for the development locale. For other locales, return this value if key isn’t
+    /// found in the table.
+    ///   - comment: The comment to place above the key-value pair in the strings file. This parameter provides
+    /// the translator with some context about the localized string’s presentation to the user.
+    /// - Returns: Localized string. Please refer to the Xcode documentation of `NSLocalizedString()` API for details.
+    func localized(
+        tableName: String? = nil,
+        bundle: Bundle = Bundle.main,
+        value: String = "",
+        comment: String = "") -> String {
+        return NSLocalizedString(self, tableName: tableName, bundle: bundle, value: value, comment: comment)
     }
     #endif
 
@@ -600,7 +613,7 @@ public extension String {
     ///
     /// - Returns: The string in slug format.
     func toSlug() -> String {
-        let lowercased = self.lowercased()
+        let lowercased = lowercased()
         let latinized = lowercased.folding(options: .diacriticInsensitive, locale: Locale.current)
         let withDashes = latinized.replacingOccurrences(of: " ", with: "-")
 
@@ -753,7 +766,7 @@ public extension String {
     ///        "".firstCharacterUppercased() -> ""
     ///
     mutating func firstCharacterUppercased() {
-        guard let first = first else { return }
+        guard let first else { return }
         self = String(first).uppercased() + dropFirst()
     }
 
@@ -1067,8 +1080,8 @@ public extension String {
     ///   - lhs: String to check on regex pattern.
     ///   - rhs: Regex pattern to match against.
     /// - Returns: true if string matches the pattern.
-    static func ~= (lhs: String, rhs: String) -> Bool {
-        return rhs.range(of: lhs, options: .regularExpression) != nil
+    static func =~ (lhs: String, rhs: String) -> Bool {
+        return lhs.range(of: rhs, options: .regularExpression) != nil
     }
     #endif
 
@@ -1079,9 +1092,9 @@ public extension String {
     ///   - lhs: String to check on regex.
     ///   - rhs: Regex to match against.
     /// - Returns: `true` if there is at least one match for the regex in the string.
-    static func ~= (lhs: NSRegularExpression, rhs: String) -> Bool {
-        let range = NSRange(rhs.startIndex..<rhs.endIndex, in: rhs)
-        return lhs.firstMatch(in: rhs, range: range) != nil
+    static func =~ (lhs: String, rhs: NSRegularExpression) -> Bool {
+        let range = NSRange(lhs.startIndex..<lhs.endIndex, in: lhs)
+        return rhs.firstMatch(in: lhs, range: range) != nil
     }
     #endif
 
@@ -1228,12 +1241,12 @@ public extension String {
     /// - Parameter base64: base64 string.
     init?(base64: String) {
         guard let decodedData = Data(base64Encoded: base64) else { return nil }
-        self.init(String(decoding: decodedData, as: UTF8.self))
+        self.init(data: decodedData, encoding: .utf8)
     }
     #endif
 }
 
-#if !os(Linux)
+#if !os(Linux) && !os(Android)
 
 // MARK: - NSAttributedString
 
@@ -1397,4 +1410,10 @@ public extension String {
     }
 }
 
+#endif
+
+// MARK: Operators
+
+#if canImport(Foundation)
+infix operator =~: ComparisonPrecedence
 #endif

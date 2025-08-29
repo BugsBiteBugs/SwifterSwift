@@ -1,4 +1,4 @@
-// UIBezierPathExtensionsTests.swift - Copyright 2024 SwifterSwift
+// UIBezierPathExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -6,6 +6,7 @@ import XCTest
 #if canImport(UIKit)
 import UIKit
 
+@MainActor
 final class UIBezierPathExtensionsTests: XCTestCase {
     func testInitPathFromTo() {
         let fromPoint = CGPoint(x: -1, y: 2)

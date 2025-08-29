@@ -1,6 +1,6 @@
-// UserDefaultsExtensions.swift - Copyright 2024 SwifterSwift
+// UserDefaultsExtensions.swift - Copyright 2025 SwifterSwift
 
-#if canImport(Foundation) && !os(Linux)
+#if canImport(Foundation) && !os(Linux) && !os(Android)
 import Foundation
 
 // MARK: - Methods
@@ -52,7 +52,7 @@ public extension UserDefaults {
     ///   - object: Codable object to store.
     ///   - key: Identifier of the object.
     ///   - encoder: Custom JSONEncoder instance. Defaults to `JSONEncoder()`.
-    func set<T: Codable>(object: T, forKey key: String, usingEncoder encoder: JSONEncoder = JSONEncoder()) {
+    func set(object: some Codable, forKey key: String, usingEncoder encoder: JSONEncoder = JSONEncoder()) {
         let data = try? encoder.encode(object)
         set(data, forKey: key)
     }

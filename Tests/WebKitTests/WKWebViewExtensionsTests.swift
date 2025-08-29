@@ -1,4 +1,4 @@
-// WKWebViewExtensionsTests.swift - Copyright 2024 SwifterSwift
+// WKWebViewExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -6,13 +6,17 @@ import XCTest
 #if canImport(WebKit)
 import WebKit
 
+@available(iOS 13.0, macOS 10.15, *)
+@MainActor
 final class WKWebViewExtensionsTests: XCTestCase {
     private let timeout = TimeInterval(10)
 
     var webView: WKWebView!
 
-    override func setUp() {
-        webView = WKWebView()
+    override func setUp() async throws {
+        _ = await Task { @MainActor in
+            webView = WKWebView()
+        }.result
     }
 
     func testLoadURL() {

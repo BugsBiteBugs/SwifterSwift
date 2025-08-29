@@ -1,4 +1,4 @@
-// NSAttributedStringExtensions.swift - Copyright 2024 SwifterSwift
+// NSAttributedStringExtensions.swift - Copyright 2025 SwifterSwift
 
 #if canImport(Foundation)
 import Foundation
@@ -15,7 +15,7 @@ import AppKit
 
 public extension NSAttributedString {
     /// SwifterSwift: Bolded string using the system font.
-    #if !os(Linux)
+    #if !os(Linux) && !os(Android)
     var bolded: NSAttributedString {
         guard !string.isEmpty else { return self }
 
@@ -33,7 +33,7 @@ public extension NSAttributedString {
     }
     #endif
 
-    #if !os(Linux)
+    #if !os(Linux) && !os(Android)
     /// SwifterSwift: Underlined string.
     var underlined: NSAttributedString {
         return applying(attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue])
@@ -59,7 +59,7 @@ public extension NSAttributedString {
     }
     #endif
 
-    #if !os(Linux)
+    #if !os(Linux) && !os(Android)
     /// SwifterSwift: Struckthrough string.
     var struckthrough: NSAttributedString {
         return applying(attributes: [.strikethroughStyle: NSNumber(value: NSUnderlineStyle.single.rawValue)])
@@ -109,9 +109,9 @@ public extension NSAttributedString {
     func applying(attributes: [Key: Any],
                   toRangesMatching pattern: String,
                   options: NSRegularExpression.Options = []) -> NSAttributedString {
-        guard let pattern = try? NSRegularExpression(pattern: pattern, options: options) else { return self }
+        guard let regularExpression = try? NSRegularExpression(pattern: pattern, options: options) else { return self }
 
-        let matches = pattern.matches(in: string, options: [], range: NSRange(0..<length))
+        let matches = regularExpression.matches(in: string, options: [], range: NSRange(0..<length))
         let result = NSMutableAttributedString(attributedString: self)
 
         for match in matches {
@@ -127,8 +127,8 @@ public extension NSAttributedString {
     ///   - attributes: Dictionary of attributes.
     ///   - target: a subsequence string for the attributes to be applied to.
     /// - Returns: An NSAttributedString with attributes applied on the target string.
-    func applying<T: StringProtocol>(attributes: [Key: Any],
-                                     toOccurrencesOf target: T) -> NSAttributedString {
+    func applying(attributes: [Key: Any],
+                  toOccurrencesOf target: some StringProtocol) -> NSAttributedString {
         let pattern = "\\Q\(target)\\E"
 
         return applying(attributes: attributes, toRangesMatching: pattern)

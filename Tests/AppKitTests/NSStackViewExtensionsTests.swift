@@ -1,10 +1,11 @@
-// NSStackViewExtensionsTests.swift - Copyright 2024 SwifterSwift
+// NSStackViewExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 #if os(macOS)
 
 @testable import SwifterSwift
 import XCTest
 
+@MainActor
 final class NSStackViewExtensionsTests: XCTestCase {
     func testAddArrangedSubviews() {
         let view1 = NSView()

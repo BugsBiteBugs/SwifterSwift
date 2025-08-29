@@ -1,4 +1,4 @@
-// UIButtonExtensionsTests.swift - Copyright 2024 SwifterSwift
+// UIButtonExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -6,6 +6,7 @@ import XCTest
 #if canImport(UIKit) && !os(watchOS)
 import UIKit
 
+@MainActor
 final class UIButtonExtensionsTests: XCTestCase {
     func testImageForDisabled() {
         let button = UIButton()

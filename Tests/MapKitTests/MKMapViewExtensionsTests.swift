@@ -1,4 +1,4 @@
-// MKMapViewExtensionsTests.swift - Copyright 2024 SwifterSwift
+// MKMapViewExtensionsTests.swift - Copyright 2025 SwifterSwift
 
 @testable import SwifterSwift
 import XCTest
@@ -7,6 +7,7 @@ import XCTest
 import struct CoreLocation.CLLocationCoordinate2D
 import MapKit
 
+@MainActor
 final class MKMapViewExtensionsTests: XCTestCase {
     func testRegister() {
         let mapView = MKMapView()
